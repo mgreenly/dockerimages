@@ -21,15 +21,16 @@ ENV PATH /home/utopia/.gems/bin:/usr/local/bin:/usr/bin:/bin
 #
 # Copy the application into the image
 #
-RUN mkdir -p /home/utopia/lifeline
-COPY ./lib /home/utopia/lifeline/
-COPY ./bin /home/utopia/lifeline/
-COPY Gemfile*  /home/utopia/lifeline/
+RUN mkdir -p /home/utopia/app
+COPY ./lib /home/utopia/app/lib
+COPY ./bin /home/utopia/app/bin
+COPY Gemfile /home/utopia/app/
+COPY Gemfile.lock /home/utopia/app/
 
 #
 # Install the gems needed by the image
 #
-WORKDIR /home/utopia/lifeline
+WORKDIR /home/utopia/app
 RUN bundle
 
 
