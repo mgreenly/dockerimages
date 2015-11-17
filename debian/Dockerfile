@@ -1,6 +1,9 @@
 FROM debian:jessie
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update
+RUN apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -q -y --no-install-recomends install \
   automake                  \
   bison                     \
   build-essential           \

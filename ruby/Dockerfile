@@ -6,25 +6,23 @@ ENV RUBY_DOWNLOAD_SHA256 f59c1596ac39cc7e60126e7d3698c19f482f04060674fdfe0124e17
 ENV RUBYGEMS_VERSION 2.5.0
 ENV BUNDLER_VERSION 1.10.6
 
-RUN apt-get update \
-    && apt-get install -y bison libgdbm-dev ruby \
-    && rm -rf /var/lib/apt/lists/* \
-    && mkdir -p /usr/src/ruby \
-    && curl -fSL -o ruby.tar.gz "http://cache.ruby-lang.org/pub/ruby/$RUBY_MAJOR/ruby-$RUBY_VERSION.tar.gz" \
-    && echo "$RUBY_DOWNLOAD_SHA256 *ruby.tar.gz" | sha256sum -c - \
-    && tar -xzf ruby.tar.gz -C /usr/src/ruby --strip-components=1 \
-    && rm ruby.tar.gz \
-    && cd /usr/src/ruby \
-    && autoconf \
-    && ./configure --disable-install-doc \
-    && make -j"$(nproc)" \
-    && make install \
-    && apt-get purge -y --auto-remove bison libgdbm-dev ruby \
-    && gem update --system $RUBYGEMS_VERSION \
-    && rm -r /usr/src/ruby
+WORKDIR /tmp
 
-RUN echo 'install: --no-document\nupdate: --no-document' >> "$HOME/.gemrc"
-RUN echo 'install: --no-document\nupdate: --no-document' >> "/etc/skel/.gemrc"
-RUN gem install bundler --version "$BUNDLER_VERSION"
+RUN curl -fSL -o ruby.tar.gz "http://cache.ruby-lang.org/pub/ruby/$RUBY_MAJOR/ruby-$RUBY_VERSION.tar.gz"
+RUN  echo "$RUBY_DOWNLOAD_SHA256 *ruby.tar.gz" | sha256sum -c -
+RUN  tar -xvf ruby.tar.gz
+RUN cd /tmp/ruby-"$RUBY_VERSION" \
+ && autoconf \
+ && ./configure --disable-install-doc\
+ && make -j"$(nproc)" \
+ && make install
+
+RUN echo 'install: --no-document\nupdate: --no-document' >> "$HOME/.gemrc" \
+ && echo 'install: --no-document\nupdate: --no-document' >> "/etc/skel/.gemrc" \
+ && gem update --system $RUBYGEMS_VERSION \
+ && gem install --no-document bundler:"$BUNDLER_VERSION"
+
+RUN  rm ruby.tar.gz
+
 
 CMD [ "irb" ]

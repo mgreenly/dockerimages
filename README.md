@@ -3,10 +3,19 @@
 A collection of docker images
 
 
-## misc
-
-remove untagged images
+## Some Helpful Commands
 
 ```
+# remove untagged images
 docker rmi -f $(docker images | grep "<none>" | awk "{print \$3}")
-``` 
+# run image interactively
+docker run -i -t mgreenly/jessie /bin/bash
+# stop all running containers
+docker stop $(docker ps -a -q)
+# remove all containers
+docker rm $(docker ps -a -q)
+# remove all containers with some word 'ruby' in there descriptio
+docker rm $(docker ps -a | grep "ruby" | awk "{print \$1}")
+```
+
+
