@@ -1,0 +1,21 @@
+#!/bin/bash
+
+#
+# stop all running containers, remove them, and cleanup all untagged images
+#
+
+if [[ $(docker ps | wc -l) > 1 ]]; then
+  echo "stoping containers"
+  docker stop $(docker ps -a -q)
+fi
+
+if [[ $(docker ps -a | wc -l) > 1 ]]; then
+  echo "removing containers"
+  docker rm $(docker ps -a -q)
+fi
+
+if [[ $(docker images | grep "<none>" | awk "{print \$3}" | wc -l) > 0 ]]; then
+  echo "removing untagged images"
+  docker rmi -f $(docker images | grep "<none>" | awk "{print \$3}")
+fi
+

@@ -1,4 +1,4 @@
-FROM mgreenly/jessie
+FROM mgreenly/debian
 
 ENV RUBY_MAJOR 2.1
 ENV RUBY_VERSION 2.1.7
@@ -22,7 +22,4 @@ RUN echo 'install: --no-document\nupdate: --no-document' >> "$HOME/.gemrc" \
  && gem update --system $RUBYGEMS_VERSION \
  && gem install --no-document bundler:"$BUNDLER_VERSION"
 
-RUN  rm ruby.tar.gz
-
-
-CMD [ "irb" ]
+RUN rm ruby.tar.gz
