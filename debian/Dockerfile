@@ -1,9 +1,7 @@
 FROM debian:jessie
 
-
-ENV DEBIAN_FRONTEND=noninteractive
-
-RUN apt-get -q -y update &&                  \
+RUN DEBIAN_FRONTEND=noninteractive           \
+    apt-get -q -y update &&                  \
     apt-get                                  \
       -o Dpkg::Options::="--force-confdef"   \
       -o Dpkg::Options::="--force-confold"   \

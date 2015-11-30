@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 oldid=$(docker images mgreenly/debian | tail -n +2 | grep latest | awk "{print \$3}")
 tag=$(date +"%Y%m%d%H%M%S")
 
