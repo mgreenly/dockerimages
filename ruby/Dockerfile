@@ -1,10 +1,10 @@
 FROM mgreenly/debian
 
-RUN RUBY_MAJOR=2.1 \
-    RUBY_VERSION=2.1.7 \
-    RUBY_SHA256=f59c1596ac39cc7e60126e7d3698c19f482f04060674fdfe0124e1752ba6dd81 \
-    RUBYGEMS_VERSION=2.5.0 \
-    BUNDLER_VERSION=1.10.6 \
+RUN RUBY_MAJOR=2.2 \
+    RUBY_VERSION=2.2.4 \
+    RUBY_SHA256=b6eff568b48e0fda76e5a36333175df049b204e91217aa32a65153cc0cdcb761 \
+    RUBYGEMS_VERSION=2.5.1 \
+    BUNDLER_VERSION=1.11.2 \
     && cd /tmp \
     && curl -fSL -o ruby.tar.gz "http://cache.ruby-lang.org/pub/ruby/$RUBY_MAJOR/ruby-$RUBY_VERSION.tar.gz" \
     && echo "$RUBY_SHA256 ruby.tar.gz" | sha256sum -c - \
