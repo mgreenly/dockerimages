@@ -61,7 +61,7 @@ hello-world             latest              09ddb1842172        57 seconds ago  
 
 Inevitably you will need to have more or different system packages to compile your application. The
 best way to handle this would be to fork this package and edit the included system packages to your
-needs.
+needs or send a pull request and I'll add it.
 
 I believe Haskell statically links all the haskell libraries into the target executable so you will
 not have to add additional packages to the base image, beyond `gmp`, when creating your runtime
