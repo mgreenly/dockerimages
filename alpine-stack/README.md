@@ -56,3 +56,13 @@ docker images
 REPOSITORY              TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
 hello-world             latest              09ddb1842172        57 seconds ago      10.23 MB
 ```
+
+## Tune for your use
+
+Inevitably you will need to have more or different system packages to compile your application. The
+best way to handle this would be to fork this package and edit the included system packages to your
+needs.
+
+I believe Haskell statically links all the haskell libraries into the target executable so you will
+not have to add additional packages to the base image, beyond the `gmp`, when creating your runtime
+image.
