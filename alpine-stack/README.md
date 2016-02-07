@@ -3,7 +3,7 @@
 
 ## Introduction
 
-**Alpine-stack** is a Docker image of a [GHC 7.10.3](https://www.haskell. rg/ghc/), [Stack](http://docs.haskellstack.org/en/stable/README.html) based development environment for [Haskell](https://www.haskell.org/) on [Alpine Linux](http://alpinelinux.org/).
+**Alpine stack** is a [Docker](https://www.docker.com/) image for [Stack](http://docs.haskellstack.org/en/stable/README.html) based [Haskell](https://www.haskell.org/) development on [Alpine Linux](http://alpinelinux.org/).
 
 It allows you to build very small, 10+ MB docker images for haskell applications.
 
