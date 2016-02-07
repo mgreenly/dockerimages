@@ -1,6 +1,0 @@
-#!/bin/sh
-
-docker run --rm -i -t \
-  -v $PWD:/data \
-  mgreenly/alpine-stack:latest \
-  stack $@
