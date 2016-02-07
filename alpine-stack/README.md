@@ -5,7 +5,7 @@
 
 This is built on [alpine-linux-ghc-bootstrap](https://github.com/mitchty/alpine-linux-ghc-bootstrap).
 
-The +build.sh+ script plus the Dockerfile create the [mgreenly/alpine-stack](https://hub.docker.com/r/mgreenly/alpine-stack/) docker image.
+The **build.sh** script plus the Dockerfile create the [mgreenly/alpine-stack](https://hub.docker.com/r/mgreenly/alpine-stack/) docker image.
 
 This is a development environment for GHC 7.10.3 that includes Stack.
 
