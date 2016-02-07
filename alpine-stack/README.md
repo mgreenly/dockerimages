@@ -3,16 +3,15 @@
 
 ## Introduction
 
-This is built on [alpine-linux-ghc-bootstrap](https://github.com/mitchty/alpine-linux-ghc-bootstrap).
+**Alpine-stack** is a Docker image of a [GHC 7.10.3](https://www.haskell. rg/ghc/), [Stack](http://docs.haskellstack.org/en/stable/README.html) based development environment for [Haskell](https://www.haskell.org/) on [Alpine Linux](http://alpinelinux.org/).
 
-The **build.sh** script and the **Dockerfile** are used to create [mgreenly/alpine-stack](https://hub.docker.com/r/mgreenly/alpine-stack/).
+It allows you to build very small, 10+ MB docker images for haskell applications.
 
-The **alpine-stack** image is a [GHC 7.10.3](https://www.haskell.org/) based [Stack](http://docs.haskellstack.org/en/stable/README.html) development environment for [Alpine Linux](http://alpinelinux.org/).
+This is built on [alpine-linux-ghc-bootstrap](https://github.com/mitchty/alpine-linux-ghc-bootstrap) I didn't do any of the heavy lifting.
 
+## To use this image
 
-## How I use this
-
-I copy the `alpine-stack` script to `~/.local/bin/alpine-stack`, so that it's on my path.
+Copy the `alpine-stack` script to `~/.local/bin/alpine-stack`, so that it's on your path.
 
 Then use the command `alpine-stack` anywhere you would have used `stack`.
 
@@ -50,7 +49,7 @@ Then run the image.
 docker run hello-world
 ```
 
-The image is a very reasonable 10.23 MB.
+The resulting image is a very reasonable 10.23 MB.
 
 ```
 docker images
