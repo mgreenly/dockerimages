@@ -3,7 +3,7 @@
 
 ## Introduction
 
-This is a [Docker](https://www.docker.com/) image for [Stack](http://docs.haskellstack.org/en/stable/README.html) based [Haskell](https://www.haskell.org/) development on [Alpine Linux](http://alpinelinux.org/).
+This is a [Docker](https://www.docker.com/) image for a [Stack](http://docs.haskellstack.org/en/stable/README.html) based [Haskell](https://www.haskell.org/) development environment on [Alpine Linux](http://alpinelinux.org/).
 
 It allows you to build very small, 10+ MB, Docker images for Haskell applications.
 
