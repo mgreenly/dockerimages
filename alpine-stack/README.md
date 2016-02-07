@@ -3,11 +3,11 @@
 
 ## Introduction
 
-**Alpine stack** is a [Docker](https://www.docker.com/) image for [Stack](http://docs.haskellstack.org/en/stable/README.html) based [Haskell](https://www.haskell.org/) development on [Alpine Linux](http://alpinelinux.org/).
+This is a [Docker](https://www.docker.com/) image for [Stack](http://docs.haskellstack.org/en/stable/README.html) based [Haskell](https://www.haskell.org/) development on [Alpine Linux](http://alpinelinux.org/).
 
-It allows you to build very small, 10+ MB docker images for haskell applications.
+It allows you to build very small, 10+ MB, Docker images for Haskell applications.
 
-This is built on [alpine-linux-ghc-bootstrap](https://github.com/mitchty/alpine-linux-ghc-bootstrap) I didn't do any of the heavy lifting.
+This is built on [alpine-linux-ghc-bootstrap](https://github.com/mitchty/alpine-linux-ghc-bootstrap).  I didn't do any of the heavy lifting.
 
 ## To use this image
 
