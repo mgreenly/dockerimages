@@ -64,5 +64,5 @@ best way to handle this would be to fork this package and edit the included syst
 needs.
 
 I believe Haskell statically links all the haskell libraries into the target executable so you will
-not have to add additional packages to the base image, beyond the `gmp`, when creating your runtime
+not have to add additional packages to the base image, beyond `gmp`, when creating your runtime
 image.
