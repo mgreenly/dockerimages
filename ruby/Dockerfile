@@ -1,4 +1,4 @@
-FROM mgreenly/debian
+FROM mgreenly/debian:latest
 
 RUN RUBY_MAJOR=2.3 \
     RUBY_VERSION=2.3.0 \

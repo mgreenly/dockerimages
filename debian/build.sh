@@ -1,21 +1,33 @@
 #!/bin/bash
 
-oldid=$(docker images mgreenly/debian | tail -n +2 | grep latest | awk "{print \$3}")
-tag=$(date +"%Y%m%d%H%M%S")
+#
+# Automation to build and upload this docker image. 
+#
 
-docker build -t mgreenly/debian:$tag .
-newid=$(docker images mgreenly/debian | tail -n +2 | grep $tag | awk "{print \$3}")
-docker save $newid | sudo docker-squash -from root -t mgreenly/debian:latest | docker load
+#
+# make sure the base is current
+#
+docker pull debian:latest
 
-echo
-echo "OLD=$oldid NEW=$newid"
-echo
+#
+# get the tag and id of the current image/tag 
+#
+oldtag=$(docker images --format="{{.ID}}:{{.Tag}}" mgreenly/debian | grep -v latest | cut -f2 -d:)
+oldid=$(docker images --format="{{.ID}}:{{.Tag}}" mgreenly/debian | grep latest | cut -f1 -d:)
 
-if [[ $oldid == $newid ]]; then
-    echo "same"
-    docker rmi mgreenly/debian:$tag
-else
-    echo "different"
-    docker push mgreenly/debian:latest
-    docker rmi $oldid
+#
+# generate the tag for the new image and build it also tag it latest
+#
+newtag=$(date +"%Y%m%d%H%M%S")
+docker build -t mgreenly/debian:$newtag .
+docker tag mgreenly/debian:"$newtag" mgreenly/debian:latest
+
+if [[ -n "$oldtag" ]]; then
+  docker rmi mgreenly/debian:$oldtag
 fi
+
+
+#
+# upload the new latest
+#
+docker push mgreenly/debian:latest
