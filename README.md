@@ -1,6 +1,6 @@
 # Docker Images
 
-A collection of docker images that I use.
+A collection of docker images that I maintain for personal use.
 
   * [mgreenly/debian](https://hub.docker.com/r/mgreenly/debian/)
   * [mgreenly/ruby](https://hub.docker.com/r/mgreenly/ruby/)
