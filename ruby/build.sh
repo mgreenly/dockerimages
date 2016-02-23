@@ -30,4 +30,4 @@ fi
 #
 # upload the new latest
 #
-#docker push mgreenly/ruby:latest
+docker push mgreenly/ruby:latest
