@@ -5,7 +5,7 @@
 #
 
 #
-# make sure the base is current
+# make sure the base image is up to date
 #
 docker pull mgreenly/debian:latest
 
@@ -16,7 +16,7 @@ oldtag=$(docker images --format="{{.ID}}:{{.Tag}}" mgreenly/ruby | grep -v lates
 oldid=$(docker images --format="{{.ID}}:{{.Tag}}" mgreenly/ruby | grep latest | cut -f1 -d:)
 
 #
-# generate the tag for the new image and build it also tag it latest
+# generate the tag for the new image then build it and tag it 'latest'
 #
 newtag=$(date +"%Y%m%d%H%M%S")
 docker build -t mgreenly/ruby:$newtag .
