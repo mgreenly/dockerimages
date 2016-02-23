@@ -1,3 +1,3 @@
 # mgreenly/ruby
 
-This is stripped down version of the official ruby image for ruby-2.1.7
+This is the base image I use for ruby projects.

@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#
+# Save this as $HOME/.local/bin/alpine-stack and then make sure 
+# $HOME/.local/bin is in your path.  This will allow you to use
+# the command `alpine-stack` any where you would have previously
+# used the `stack` command.
+# 
+
+docker run --rm -i -t \
+  -v $PWD:/data \
+  mgreenly/alpine-stack:latest \
+  stack $@
