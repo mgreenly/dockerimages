@@ -19,9 +19,15 @@ RUN apk update \
       unixodbc-dev \
       yaml-dev \
       zlib-dev \
-    && adduser -D alpine-stack \
+      ncurses-dev \
+      ncurses-libs \
+      ncurses \
+      ncurses5-widec-libs \
+      ncurses-terminfo-base \
+      ncurses-terminfo \
+    && adduser -D -u1000 alpine \
     && mkdir /data
 
-USER alpine-stack
+USER alpine
 
 WORKDIR /data

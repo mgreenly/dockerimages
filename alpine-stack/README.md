@@ -5,66 +5,42 @@
 
 This is a [Docker](https://www.docker.com/) image for a [Stack](http://docs.haskellstack.org/en/stable/README.html) based [Haskell](https://www.haskell.org/) development environment on [Alpine Linux](http://alpinelinux.org/).
 
-It allows you to build very small, 10+ MB, Docker images for Haskell applications.
+It allows you to build very small Docker images for Stack based Haskell applications.  Approximately 7MB for a hello world application on a base Alpine Linux image vs 137MB for the same application on the debian stable image.
 
-This is built on [alpine-linux-ghc-bootstrap](https://github.com/mitchty/alpine-linux-ghc-bootstrap).  I didn't do any of the heavy lifting.
+This is built on [alpine-linux-ghc-bootstrap](https://github.com/mitchty/alpine-linux-ghc-bootstrap).  I didn't do any of the heavy lifting.  Mitchty deserves all the credit.  I just tried to put his hardwork to good use.
 
-## To use this image
+## How To Use This
 
-First pull the docker image `docker pull mgreenly/alpine-stack:latest`.
+There are two scripts in the bin directory.  Add both to $HOME/.local/bin directory.
 
-Then copy the `alpine-stack` script to `~/.local/bin/alpine-stack`, so that it's on your path.
+Inside the directory of your stack project run `alpine-dockerize`.
 
-Then you can use the command `alpine-stack` anywhere you would have used `stack`.
+The dockerize script generates a 'Dockerfile'.  The  dockerize script is pretty dump.  It assumes there's only a single executable defined in the cabal files and generates the necessary commands to copy it into the image.  It's purpose is to provdie a baseline you can evolve.
 
-## Example
+The dockerize script also generates a 'build.sh' script.  This scripts purpose is to reduce the build process to a single command `./build'.  Delete it if you don't want it.
 
-Build a simple hello world program.
+After running the dockerize script just run `.\build.sh` to build the image.
 
-```
-alpine-stack new hello-world simple
-cd hello-world
-alpine-stack build
-```
+## Example.
 
-Create a `Dockefile` like this.
+Doing this for a hello-world application may look like this.
 
 ```
-FROM alpine:latest
-
-ADD .stack-work/install/x86_64-linux/lts-5.1/7.10.3/bin /main
-
-RUN apk update && apk add gmp
-
-CMD /main/hello-world
+stack new hello-world                         # create new stack project
+cd hello-world                                # enter project
+alpine-dockerize                              # create docker/build.sh scripts
+alpine-stack build                            # build manually
+docker build -t mgreenly/hello-world .        # create image manually
+docker run mgreenly/hello-world               # run the image
 ```
 
-Then build your application image.
 
-```
-docker build -t hello-world .
-```
+## How things work
 
-Then run the image.
+The `mgreenly/alpine-stack` image is only the development environment.  It has stack, ghc and ghci installed on it.
 
-```
-docker run hello-world
-```
+The `alpine-stack` script simply runs that docker image, mounts the local project directory for it and passes any arguments supplied to stack.  You can use the `alpine-stack` command any place you would have used the normal `stack` command.
 
-The resulting image is a very reasonable 10.23 MB.
+When the image builds your project the output will be in the '.stack-work' directory just like normal.  Except it will have been built on Alpine Linux and linked to run on Alpine Linux and most likely will not run on your system.
 
-```
-docker images
-REPOSITORY              TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
-hello-world             latest              09ddb1842172        57 seconds ago      10.23 MB
-```
-
-## Tune for your use
-
-Inevitably you will need to have more or different system packages to compile your application. The
-best way to handle this would be to fork this repository and edit the included system packages to your
-needs or send a pull request and I'll add it.
-
-I believe Haskell statically links all the haskell libraries into the target executable so you will
-not have to add additional packages to the base image, beyond `gmp`, when creating your runtime
-image.
+The build script uses the base alpine image, which is only 5MB, copies the application out of the local .stack-work directory into /usr/local/bin in the image.

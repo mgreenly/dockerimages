@@ -20,7 +20,7 @@ oldid=$(docker images --format="{{.ID}}:{{.Tag}}" mgreenly/alpine-stack | grep l
 #
 newtag=$(date +"%Y%m%d%H%M%S")
 docker build -t mgreenly/alpine-stack:$newtag .
-docker tag mgreenly/alpine-stack:"$newtag" mgreenly/alpine-stack:latest
+docker tag -f mgreenly/alpine-stack:"$newtag" mgreenly/alpine-stack:latest
 
 if [[ -n "$oldtag" ]]; then
   docker rmi mgreenly/alpine-stack:$oldtag
