@@ -9,7 +9,9 @@ It allows you to build very small Docker images for Stack based Haskell applicat
 
 Approximately 7MB for a typical hello world application vs 137MB for the same application on debian stable.
 
-This is built on [alpine-linux-ghc-bootstrap](https://github.com/mitchty/alpine-linux-ghc-bootstrap).  I didn't do any of the heavy lifting.  [Mitchty](https://github.com/mitchty/) deserves all the credit.  I just tried to put his hardwork to good use.
+This is built on [alpine-linux-ghc-bootstrap](https://github.com/mitchty/alpine-linux-ghc-bootstrap).  I didn't do any of the heavy lifting.  [Mitchty](https://github.com/mitchty/) deserves all the credit.
+
+I just tried to put his hardwork to good use.
 
 ## How To Use This
 
@@ -17,7 +19,7 @@ There are two scripts in the bin directory.  Add both to your $HOME/.local/bin d
 
 Inside the directory of your stack project run `alpine-dockerize`.
 
-The dockerize script generates a 'Dockerfile'.  The  dockerize script is pretty dumb.  It assumes there's only a single executable defined in the cabal files and generates the necessary commands to copy it into the image.  It's purpose is to provdie a baseline you can evolve.
+The dockerize script generates a 'Dockerfile'.  The  dockerize script is pretty dumb.  It assumes there's only a single executable defined in the cabal files and generates the necessary commands to copy it into the image.  It's purpose is to provide a baseline you can evolve.
 
 The dockerize script also generates a 'build.sh' script.  This scripts purpose is to reduce the build process to a single command `./build'.  Delete it if you don't want it.
 
