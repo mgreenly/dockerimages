@@ -19,7 +19,7 @@ oldid=$(docker images --format="{{.ID}}:{{.Tag}}" mgreenly/ruby | grep latest | 
 # generate the tag for the new image then build it and tag it 'latest'
 #
 newtag=$(date +"%Y%m%d%H%M%S")
-docker build -t mgreenly/ruby:$newtag .
+docker build --no-cache -t mgreenly/ruby:$newtag .
 docker tag mgreenly/ruby:"$newtag" mgreenly/ruby:latest
 
 if [[ -n "$oldtag" ]]; then

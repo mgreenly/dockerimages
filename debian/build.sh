@@ -19,7 +19,7 @@ oldid=$(docker images --format="{{.ID}}:{{.Tag}}" mgreenly/debian | grep latest 
 # generate the tag for the new image and build it also tag it latest
 #
 newtag=$(date +"%Y%m%d%H%M%S")
-docker build -t mgreenly/debian:$newtag .
+docker build --no-cache -t mgreenly/debian:$newtag .
 docker tag mgreenly/debian:"$newtag" mgreenly/debian:latest
 
 if [[ -n "$oldtag" ]]; then
