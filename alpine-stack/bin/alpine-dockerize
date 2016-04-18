@@ -108,9 +108,9 @@ fi
 EOF
 chmod +x build.sh
 
-##
-## build the docker image
-##
+#
+# output message 
+#
 echo
 echo "Dockerfile - successfully created"
 echo 
