@@ -43,8 +43,9 @@ RUN DEBIAN_FRONTEND=noninteractive           \
       ncurses-dev                            \
       pkg-config                             \
       zlib1g-dev                             \
-      freetds-dev                            \
-      freetds-bin                            \
       unixodbc-bin                           \
       tdsodbc                                \
       && rm -rf /var/lib/apt/lists/*
+
+COPY ./freetds/freetds_95.95-mg.1_amd64.deb  /tmp/freetds_95.95-mg.1_amd64.deb
+RUN  dpkg -i /tmp/freetds_95.95-mg.1_amd64.deb

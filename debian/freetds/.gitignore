@@ -1,0 +1,3 @@
+*.deb
+*.tar.gz
+/freetds-0.95.95

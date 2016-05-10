@@ -19,11 +19,8 @@ RUN USERNAME=haskell \
         -o Dpkg::Options::="--force-confdef" \
         -o Dpkg::Options::="--force-confold" \
         -q -y install \
-        sudo \
-        vim \
-        curl \
-        stack \
         libncursesw5-dev \
+        stack \
     && useradd --no-create-home --home-dir=/home/$USERNAME --shell=/bin/bash $USERNAME \
     && adduser $USERNAME sudo \
     && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
