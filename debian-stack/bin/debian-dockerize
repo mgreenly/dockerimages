@@ -21,7 +21,7 @@ fi
 # build the applicaton before copying it into a base image.  This
 # image is huge but it's only for development purposes.
 #
-#docker pull mgreenly/debian-stack:latest
+docker pull mgreenly/debian-stack:latest
 
 #
 # the package name defaults to the current directory if one is not provided

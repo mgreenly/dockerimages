@@ -30,4 +30,4 @@ fi
 #
 # upload the new latest
 #
-#docker push mgreenly/debian-stack:latest
+docker push mgreenly/debian-stack:latest

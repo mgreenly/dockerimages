@@ -15,7 +15,7 @@ fi
 #
 # make sure we have the current image 
 #
-#docker pull mgreenly/debian-stack:latest
+docker pull mgreenly/debian-stack:latest
 
 #
 # the .debian-stack directory is mapped into the debian-stack
