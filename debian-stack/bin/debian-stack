@@ -1,0 +1,38 @@
+#!/bin/bash
+
+#
+# Save this as $HOME/.local/bin/debian-stack and then make sure 
+# $HOME/.local/bin is in your path.  This will allow you to use
+# the command `debian-stack` any where you would have previously
+# used the `stack` command.
+# 
+
+if [[ ! -f stack.yaml ]]; then
+  echo "Can't find a stack.yaml file.  Cowardly aborting."
+  exit
+fi
+
+#
+# make sure we have the current image 
+#
+#docker pull mgreenly/debian-stack:latest
+
+#
+# the .debian-stack directory is mapped into the debian-stack
+# image as the global $HOME/.stack directory so that it doesn't
+# have to rebuild everything from scratch every time you run
+# it for the project.
+#
+# Docker doesn't allow acess to directories outside the current
+# project so there's no practical way to share the stack global
+# directory between projects
+#
+mkdir -p $PWD/.debian-stack
+
+#
+# all arguments given to this script are passed to stack running in the image
+#
+docker run --rm -i -t \
+  -v $PWD/.debian-stack:/home/haskell/.stack  \
+  -v $PWD:/data \
+  mgreenly/debian-stack:latest stack $@

@@ -1,0 +1,140 @@
+#!/bin/bash
+
+#
+# This script tries to create a Dockerfile and build script that will
+# run the stack application in the current directory an an Alpine Linux
+# base image.
+#
+
+if [[ -e ./Dockerfile ]];then 
+  echo "Dockerfile already exists.  Cowardly refusing to run."
+  exit
+fi
+
+if [[ -e ./build.sh ]];then 
+  echo "build.sh already exists.  Cowardly refusing to run."
+  exit
+fi
+
+#
+# This image provides stack running on debian linux.  It's used to
+# build the applicaton before copying it into a base image.  This
+# image is huge but it's only for development purposes.
+#
+#docker pull mgreenly/debian-stack:latest
+
+#
+# the package name defaults to the current directory if one is not provided
+#
+IMAGE_NAME=${1:-$(basename $PWD)}
+
+#
+# the stack comamnd
+#
+mkdir -p $PWD/.debian-stack
+STACKCMD="docker run --rm -v $PWD/.debian-stack:/home/haskell/.stack -v $PWD:/data mgreenly/debian-stack:latest /usr/bin/stack"
+
+if [ ! -e .debian-stack/config.yaml ]; then
+  STACK_INSTALL_ROOT_DIR=$(eval "$STACKCMD" setup)
+fi
+
+STACK_INSTALL_ROOT_DIR=$(eval "$STACKCMD" path | grep "local-install-root" | cut -f2 -d' ')
+STACK_INSTALL_BIN_PATH=${STACK_INSTALL_ROOT_DIR}/bin
+
+
+#
+# stack only allows paths relative to the current directory
+#
+REL_STACK_BINDIR=${STACK_INSTALL_BIN_PATH#/data/}
+
+#
+# try to find the name of the executable as it's defined in the cabal file
+# this pretty much assumes there's only one executable defined
+#
+CABAL_FILE=`find . -iname *.cabal -printf "%f"`
+EXE_NAME=`grep -e '^executable' $CABAL_FILE | cut -d' ' -f2`
+
+#
+# the template for the Dockerfile.  Be sure to include any
+# specific library dependencies you're application requires
+#
+cat << EOF > Dockerfile
+FROM debian:latest
+
+RUN DEBIAN_FRONTEND=noninteractive               \\
+    apt-get -q -y update                         \\
+    && apt-get                                   \\
+      -o Dpkg::Options::="--force-confdef"       \\
+      -o Dpkg::Options::="--force-confold"       \\
+      -q -y install                              \\
+      libgmp10                                   \\
+    && apt-get clean                             \\
+    && rm -rf /var/lib/apt/lists/*
+
+ADD $REL_STACK_BINDIR /usr/local/bin
+
+CMD $EXE_NAME
+EOF
+
+#
+# generate .dockerignore file
+#
+cat << EOF > .dockerignore
+.debian-stack
+EOF
+
+#
+# generate a build script
+#
+cat << EOF > build.sh
+#!/bin/bash
+
+#
+# this script automates the docker build process
+#
+IMAGE_NAME=$USER/$IMAGE_NAME
+
+#
+# make sure the base is current
+#
+docker pull debian:latest
+
+#
+# rebuild the application
+#
+debian-stack build --force-dirty
+
+#
+# get the tag and id of the current image/tag 
+#
+oldtag=\$(docker images --format="{{.ID}}:{{.Tag}}" \$IMAGE_NAME | grep -v latest | cut -f2 -d:)
+oldid=\$(docker images --format="{{.ID}}:{{.Tag}}" \$IMAGE_NAME | grep latest | cut -f1 -d:)
+
+#
+# generate the tag for the new image and build it also tag it latest
+#
+newtag=\$(date +"%Y%m%d%H%M%S")
+docker build -t \$IMAGE_NAME:\$newtag .
+docker tag \$IMAGE_NAME:"\$newtag" \$IMAGE_NAME:latest
+
+if [[ -n "\$oldtag" ]]; then
+  docker rmi \$IMAGE_NAME:\$oldtag
+fi
+
+#
+# upload the new latest
+#
+#docker push $IMAGE_NAME:latest
+EOF
+chmod +x build.sh
+
+
+
+#
+# output message 
+#
+echo
+echo "Dockerfile - successfully created"
+echo 
+echo "  to build use \"stack build\"."
+echo

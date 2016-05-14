@@ -1,32 +1,48 @@
-# Debian Stack 
+# debian-stack
 
-This image provides a 'canned'  Debian, Stack, Vim development environment for Haskell.
 
-# Why?
+## Introduction
 
-I wanted to make it easy to share my development environment with other people.
+This is a [Docker](https://www.docker.com/) image for a [Stack](http://docs.haskellstack.org/en/stable/README.html) based [Haskell](https://www.haskell.org/) development environment on [Debian Linux](https://www.debian.org/).
 
-# Requirements
+It allows you to build relatively small Docker images for Stack based Haskell applications.
 
-  * [Docker](https://www.docker.com/) 
+Approximately 126MB for a typical hello world application.
 
-# Install
+## How To Use This
 
-```console
-docker pull mgreenly/debian-stack
+There are two scripts in the bin directory.  Add both to your $HOME/.local/bin directory.
+
+Inside the directory of your stack project run `debian-dockerize`.
+
+The dockerize script generates a 'Dockerfile'.  The  dockerize script is pretty dumb.  It assumes there's only a single executable defined in the cabal files and generates the necessary commands to copy it into the image.  It's purpose is to provide a baseline you can evolve.
+
+The dockerize script also generates a 'build.sh' script.  This scripts purpose is to reduce the build process to a single command `./build'.  Delete it if you don't want it.
+
+The dockerize script also generates a .dockerignore file.
+
+After running the dockerize script just run `.\build.sh` to build the image.
+
+## Example.
+
+Doing this for a hello-world application may look like this.
+
+```
+stack new hello-world                         # create new stack project
+cd hello-world                                # enter project
+debian-dockerize                              # create docker/build.sh scripts
+debian-stack build                            # use stack to build the application
+docker build -t mgreenly/hello-world .        # create docker image manually
+docker run mgreenly/hello-world               # run the image
 ```
 
-# Example
 
-  * Change to the root directory of you project.
-  * ```docker rune --rm -i -t -v $PWD:/home/haskell/project mgreenly/debian-stack:latest  /bin/bash```
+## How things work
 
-# Includes 
+The `mgreenly/debian-stack` image is only the development environment.  It has stack, ghc and ghci as well as many common libraries installed on it.  It's big, approximately 400MB but it only needs to exist on the development machine.
 
-  * http://www.stephendiehl.com/posts/vim_haskell.html
-  * https://github.com/tpope/vim-pathogen
-  * https://github.com/tpope/vim-sensible
-  * https://github.com/scrooloose/syntastic#installation
-  * https://github.com/bitc/vim-hdevtools
-  * http://www.mew.org/~kazu/proj/ghc-mod/en/
+The `debian-stack` script simply runs that docker image, mounts the local project directory for it and passes any arguments supplied to stack.  You can use the `debian-stack` command any place you would have used the normal `stack` command.
 
+When the image builds your project the output will be in the '.stack-work' directory just like normal.  Except it will have been built on Debian Linux and linked to run on Debian Linux and most likely will not run on your system.
+
+The build script uses the base debian image, which is only 125MB, copies the application out of the local .stack-work directory into /usr/local/bin in the image.
