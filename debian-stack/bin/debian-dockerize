@@ -84,6 +84,30 @@ cat << EOF > .dockerignore
 EOF
 
 #
+# generate run.sh file
+#
+cat << EOF > run.sh
+#!/bin/bash
+
+#
+# immediately exit if we access any unset variables
+#
+set -u
+
+#
+# pass all the necessary environment varialbes and any
+# command line arguments to the container and run it
+#
+docker run --rm -it \\
+  -e "USER=$USER" \\
+  --log-driver=syslog \\
+  --name $IMAGE_NAME \\
+  $USER/$IMAGE_NAME:latest \\
+  $IMAGE_NAME \$@
+EOF
+chmod +x run.sh
+
+#
 # generate a build script
 #
 cat << EOF > build.sh
