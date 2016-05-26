@@ -26,8 +26,10 @@ RUN apk update \
       ncurses-terminfo-base \
       ncurses-terminfo \
     && adduser -D -u1000 alpine \
-    && mkdir /data
+    && mkdir /project
 
 USER alpine
 
-WORKDIR /data
+WORKDIR /project
+
+CMD /usr/bin/stack

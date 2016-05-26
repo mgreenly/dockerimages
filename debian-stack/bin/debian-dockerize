@@ -52,7 +52,7 @@ REL_STACK_BINDIR=${STACK_INSTALL_BIN_PATH#/data/}
 # this pretty much assumes there's only one executable defined
 #
 CABAL_FILE=`find . -iname *.cabal -printf "%f"`
-EXE_NAME=`grep -e '^executable' $CABAL_FILE | cut -d' ' -f2`
+EXE_NAME=`grep -e '^executable' $CABAL_FILE | tr -s ' ' | cut -d' ' -f2`
 
 #
 # the template for the Dockerfile.  Be sure to include any

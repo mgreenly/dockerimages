@@ -1,11 +1,13 @@
 #!/bin/bash
 
+# This will allow you to use the `alpine-stack` command in
+# the project folder of any stack application just like you
+# would have used the normal `stack` command.
 #
-# Save this as $HOME/.local/bin/alpine-stack and then make sure 
-# $HOME/.local/bin is in your path.  This will allow you to use
-# the command `alpine-stack` any where you would have previously
-# used the `stack` command.
-# 
+# This script needs to be on your PATH.
+#
+# This script should be run from the projects root directory.
+#
 
 if [[ ! -f stack.yaml ]]; then
   echo "Can't find a stack.yaml file.  Cowardly aborting."
@@ -15,13 +17,13 @@ fi
 #
 # make sure we have the current image 
 #
-docker pull mgreenly/alpine-stack:latest
+#docker pull mgreenly/alpine-stack:latest
 
 #
 # the .alpine-stack directory is mapped into the alpine-stack
-# image as the global $HOME/.stack directory so that it doesn't
-# have to rebuild everything from scratch every time you run
-# it for the project.
+# image as $HOME/.stack directory so that it doesn't have to
+# rebuild everything from scratch every time you run it for
+# the project.
 #
 # Docker doesn't allow acess to directories outside the current
 # project so there's no practical way to share the stack global
@@ -30,10 +32,13 @@ docker pull mgreenly/alpine-stack:latest
 mkdir -p $PWD/.alpine-stack
 
 #
-# all arguments given to this script are passed to stack running in the image
+# all arguments given to this script are passed to the stack
+# application running in the image.  The containers work directory
+# when stack is run will be /project which is mapped to the 
+# current directory when this script is run.
 #
 docker run --rm -i -t \
   -v $PWD/.alpine-stack:/home/alpine/.stack  \
-  -v $PWD:/data \
+  -v $PWD:/project \
   mgreenly/alpine-stack:latest \
   stack $@

@@ -32,7 +32,7 @@ IMAGE_NAME=${1:-$(basename $PWD)}
 # the stack comamnd
 #
 mkdir -p $PWD/.alpine-stack
-STACKCMD="docker run --rm -v $PWD/.alpine-stack:/home/alpine/.stack -v $PWD:/data mgreenly/alpine-stack:latest /usr/bin/stack"
+STACKCMD="docker run --rm -v $PWD/.alpine-stack:/home/alpine/.stack -v $PWD:/project mgreenly/alpine-stack:latest /usr/bin/stack"
 
 STACK_INSTALL_ROOT_DIR=$(eval "$STACKCMD" path | grep "local-install-root" | cut -f2 -d' ')
 STACK_INSTALL_BIN_PATH=${STACK_INSTALL_ROOT_DIR}/bin
@@ -40,14 +40,14 @@ STACK_INSTALL_BIN_PATH=${STACK_INSTALL_ROOT_DIR}/bin
 #
 # stack only allows paths relative to the current directory
 #
-REL_STACK_BINDIR=${STACK_INSTALL_BIN_PATH#/data/}
+REL_STACK_BINDIR=${STACK_INSTALL_BIN_PATH#/project/}
 
 #
 # try to find the name of the executable as it's defined in the cabal file
 # this pretty much assumes there's only one executable defined
 #
 CABAL_FILE=`find . -iname *.cabal -printf "%f"`
-EXE_NAME=`grep -e '^executable' $CABAL_FILE | cut -d' ' -f2`
+EXE_NAME=`grep -e '^executable' $CABAL_FILE | tr -s ' ' | cut -d' ' -f2`
 
 #
 # the template for the Dockerfile.  Be sure to include any
@@ -56,8 +56,6 @@ EXE_NAME=`grep -e '^executable' $CABAL_FILE | cut -d' ' -f2`
 cat << EOF > Dockerfile
 FROM alpine:latest
 
-RUN apk update \
- && apk add gmp
 ADD $REL_STACK_BINDIR /usr/local/bin
 
 CMD $EXE_NAME
