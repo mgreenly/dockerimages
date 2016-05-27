@@ -6,13 +6,23 @@
 # base image.
 #
 
-if [[ -e ./Dockerfile ]];then 
+if [[ -e ./Dockerfile ]];then
   echo "Dockerfile already exists.  Cowardly refusing to run."
   exit
 fi
 
-if [[ -e ./build.sh ]];then 
+if [[ -e ./build.sh ]];then
   echo "build.sh already exists.  Cowardly refusing to run."
+  exit
+fi
+
+if [[ -e ./run.sh ]];then
+  echo "run.sh already exists.  Cowardly refusing to run."
+  exit
+fi
+
+if [[ ! -e ./stack.yaml ]];then
+  echo "stack.yaml does not exist.  Cowardly refusing to run."
   exit
 fi
 
@@ -58,8 +68,47 @@ FROM alpine:latest
 
 ADD $REL_STACK_BINDIR /usr/local/bin
 
+RUN adduser -D -u1000 haskell
+
+USER haskell
+
+WORKDIR /home/haskell
+
 CMD $EXE_NAME
 EOF
+
+#
+# generate .dockerignore file
+#
+cat << EOF > .dockerignore
+.alpine-stack
+EOF
+
+
+#
+# generate run.sh file
+#
+cat << EOF > run.sh
+#!/bin/bash
+
+#
+# immediately exit if we access any unset variables
+#
+set -u
+
+#
+# pass all the necessary environment varialbes and any
+# command line arguments to the container and run it
+#
+docker run --rm -it \\
+  -e "EXAMPLE=$EXAMPLE" \\
+  --name $IMAGE_NAME \\
+  $USER/$IMAGE_NAME:latest \\
+  $IMAGE_NAME \$@
+EOF
+chmod +x run.sh
+
+
 
 #
 # generate a build script
