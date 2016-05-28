@@ -1,32 +1,32 @@
 #!/bin/bash
 
 #
-# Save this as $HOME/.local/bin/debian-stack and then make sure 
-# $HOME/.local/bin is in your path.  This will allow you to use
-# the command `debian-stack` any where you would have previously
-# used the `stack` command.
+# Save this on your $PATH for example in $HOME/.local/bin. This
+# will allow you to use the command `debian-stack` any where you
+# would have previously used the `stack` command.
 # 
 
 if [[ ! -f stack.yaml ]]; then
-  echo "Can't find a stack.yaml file.  Cowardly aborting."
-  exit
+  echo ""
+  echo "Can't find a stack.yaml file.  The current directory doesn't appear to be a Haskell Stack project.  Cowardly aborting."
+  echo ""
+  exit 1
 fi
 
 #
 # make sure we have the current image 
 #
-#docker pull mgreenly/debian-stack:latest
+docker pull mgreenly/debian-stack:latest
 
-#
-# the ".stack.debian" directory is mapped into the debian-stack
-# image as $HOME/.stack directory so that it doesn't have to
-# rebuild everything from scratch every time you run it for
-# the project.
 #
 # Docker doesn't allow build contexts to include directories
 # outside the current working directory.  So this script links
-# the current users $HOME/.stack.debian direcotory into the
-# working project directory if necessary
+# the current users $HOME/.stack.debian directory into the
+# working project directory if necessary and then mounts
+# that directory as $HOME/.stack inside the container
+#
+# This allows stack to reuse compiled packages between projects
+# like it normally would when not run in a container.
 #
 if [[ ! -e $HOME/.stack.debian ]]; then
   mkdir $HOME/.stack.debian
@@ -38,7 +38,8 @@ if [[ ! -d .stack.debian ]]; then
 fi
 
 #
-# all arguments given to this script are passed to stack running in the image
+# all arguments given to this script are passed to the stack application
+# running in the container
 #
 docker run --rm -i -t \
   -v $PWD/.stack.debian:/home/haskell/.stack  \

@@ -10,25 +10,26 @@
 #
 
 if [[ ! -f stack.yaml ]]; then
-  echo "Can't find a stack.yaml file.  Cowardly aborting."
-  exit
+  echo ""
+  echo "Can't find a stack.yaml file.  The current directory doesn't appear to be a Haskell Stack project.  Cowardly aborting."
+  echo ""
+  exit 1
 fi
 
 #
 # make sure we have the current image 
 #
-#docker pull mgreenly/alpine-stack:latest
+docker pull mgreenly/alpine-stack:latest
 
-#
-# the ".stack.alpine" directory is mapped into the alpine-stack
-# image as $HOME/.stack directory so that it doesn't have to
-# rebuild everything from scratch every time you run it for
-# the project.
 #
 # Docker doesn't allow build contexts to include directories
 # outside the current working directory.  So this script links
-# the current users $HOME/.stack.alpine direcotory into the
-# working project directory if necessary
+# the current users $HOME/.stack.alpine directory into the
+# working project directory if necessary and then mounts
+# that directory as $HOME/.stack inside the container
+#
+# This allows stack to reuse compiled packages between projects
+# like it normally would when not run in a container.
 #
 if [[ ! -e $HOME/.stack.alpine ]]; then
   mkdir $HOME/.stack.alpine
@@ -40,10 +41,8 @@ if [[ ! -d .stack.alpine ]]; then
 fi
 
 #
-# all arguments given to this script are passed to the stack
-# application running in the image.  The containers work directory
-# when stack is run will be /project which is mapped to the 
-# current directory when this script is run.
+# All arguments given to this script are passed to the stack application
+# running in the container
 #
 docker run --rm -i -t \
   -v $PWD/.stack.alpine:/home/alpine/.stack  \

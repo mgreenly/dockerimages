@@ -167,10 +167,12 @@ EOF
 chmod +x build.alpine.sh
 
 #
-# output message 
+# output message
 #
 echo
-echo "Project successfully dockerized"
-echo 
-echo "  to build use something like: \"docker build -f Dockerfile.alpine -t $USER/$IMAGE_NAME .\""
+echo "Project successfully dockerized, to build and run it do something like this..."
+echo
+echo "  alpine-stack build"
+echo "  docker build -f Dockerfile.alpine -t $USER/$IMAGE_NAME ."
+echo "  docker run --rm -it --name $IMAGE_NAME $USER/$IMAGE_NAME"
 echo
