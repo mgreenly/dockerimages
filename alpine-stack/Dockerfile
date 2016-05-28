@@ -26,7 +26,8 @@ RUN apk update \
       ncurses-terminfo-base \
       ncurses-terminfo \
     && adduser -D -u1000 alpine \
-    && mkdir /project
+    && mkdir /project \
+    && chown alpine.alpine /project
 
 USER alpine
 

@@ -17,9 +17,9 @@ RUN USERNAME=haskell \
         libncursesw5-dev \
         stack \
     && adduser --disabled-password --gecos "" --uid 1000 $USERNAME \
-    && mkdir /data \
-    && chown $USERNAME.$USERNAME /data
+    && mkdir /project \
+    && chown $USERNAME.$USERNAME /project
 
 USER haskell
 
-WORKDIR /data
+WORKDIR /project

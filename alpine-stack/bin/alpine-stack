@@ -20,16 +20,24 @@ fi
 #docker pull mgreenly/alpine-stack:latest
 
 #
-# the .alpine-stack directory is mapped into the alpine-stack
+# the ".stack.alpine" directory is mapped into the alpine-stack
 # image as $HOME/.stack directory so that it doesn't have to
 # rebuild everything from scratch every time you run it for
 # the project.
 #
-# Docker doesn't allow acess to directories outside the current
-# project so there's no practical way to share the stack global
-# directory between projects
+# Docker doesn't allow build contexts to include directories
+# outside the current working directory.  So this script links
+# the current users $HOME/.stack.alpine direcotory into the
+# working project directory if necessary
 #
-mkdir -p $PWD/.alpine-stack
+if [[ ! -e $HOME/.stack.alpine ]]; then
+  mkdir $HOME/.stack.alpine
+fi
+
+if [[ ! -d .stack.alpine ]]; then
+  ln -s $HOME/.stack.alpine $PWD/.stack.alpine
+  exit
+fi
 
 #
 # all arguments given to this script are passed to the stack
@@ -38,7 +46,7 @@ mkdir -p $PWD/.alpine-stack
 # current directory when this script is run.
 #
 docker run --rm -i -t \
-  -v $PWD/.alpine-stack:/home/alpine/.stack  \
+  -v $PWD/.stack.alpine:/home/alpine/.stack  \
   -v $PWD:/project \
   mgreenly/alpine-stack:latest \
   stack $@

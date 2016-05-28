@@ -15,24 +15,33 @@ fi
 #
 # make sure we have the current image 
 #
-docker pull mgreenly/debian-stack:latest
+#docker pull mgreenly/debian-stack:latest
 
 #
-# the .debian-stack directory is mapped into the debian-stack
-# image as the global $HOME/.stack directory so that it doesn't
-# have to rebuild everything from scratch every time you run
-# it for the project.
+# the ".stack.debian" directory is mapped into the debian-stack
+# image as $HOME/.stack directory so that it doesn't have to
+# rebuild everything from scratch every time you run it for
+# the project.
 #
-# Docker doesn't allow acess to directories outside the current
-# project so there's no practical way to share the stack global
-# directory between projects
+# Docker doesn't allow build contexts to include directories
+# outside the current working directory.  So this script links
+# the current users $HOME/.stack.debian direcotory into the
+# working project directory if necessary
 #
-mkdir -p $PWD/.debian-stack
+if [[ ! -e $HOME/.stack.debian ]]; then
+  mkdir $HOME/.stack.debian
+fi
+
+if [[ ! -d .stack.debian ]]; then
+  ln -s $HOME/.stack.debian $PWD/.stack.debian
+  exit
+fi
 
 #
 # all arguments given to this script are passed to stack running in the image
 #
 docker run --rm -i -t \
-  -v $PWD/.debian-stack:/home/haskell/.stack  \
-  -v $PWD:/data \
-  mgreenly/debian-stack:latest stack $@
+  -v $PWD/.stack.debian:/home/haskell/.stack  \
+  -v $PWD:/project \
+  mgreenly/debian-stack:latest \
+  stack $@

@@ -30,12 +30,12 @@ After running the dockerize script just run `.\build.sh` to build the image.
 Doing this for a hello-world application may look like this.
 
 ```
-stack new hello-world                         # create new stack project
-cd hello-world                                # enter project
-alpine-dockerize                              # create docker/build.sh scripts
-alpine-stack build                            # build manually
-docker build -t mgreenly/hello-world .        # create image manually
-docker run mgreenly/hello-world               # run the image
+stack new hello-world                                          # create new stack project
+cd hello-world                                                 # enter project
+alpine-dockerize                                               # create docker/build.sh scripts
+alpine-stack build                                             # build manually
+docker build -f Dockerfile.alpine -t mgreenly/hello-world .    # create image manually
+docker run mgreenly/hello-world                                # run the image
 ```
 
 
