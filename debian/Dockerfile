@@ -53,6 +53,7 @@ RUN DEBIAN_FRONTEND=noninteractive               \
       tdsodbc                                    \
       unixodbc-bin                               \
       zlib1g-dev                                 \
+      xlsx2csv                                   \
     && dpkg -i /tmp/freetds_95.95-mg.1_amd64.deb \
     && apt-get clean                             \
     && rm -rf /var/lib/apt/lists/*
