@@ -1,4 +1,4 @@
-FROM mitchty/alpine-ghc:latest
+FROM mitchty/alpine-ghc:8.0.2
 
 RUN apk update \
     && apk add \
@@ -12,7 +12,7 @@ RUN apk update \
       libffi-dev \
       libxml2-dev \
       ncurses-dev \
-      openssl-dev \
+      libressl-dev \
       postgresql-dev \
       readline-dev \
       sqlite-dev \

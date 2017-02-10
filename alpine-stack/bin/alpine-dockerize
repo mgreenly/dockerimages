@@ -39,16 +39,40 @@ docker pull mgreenly/alpine-stack:latest
 IMAGE_NAME=${1:-$(basename $PWD)}
 
 #
-# the stack comamnd
+# The $HOME/.stack.alpine directory on the host system is mapped to the ephemeral
+# docker guest as $HOME/.stack.  Doing this allows packages to be cached between
+# invocations.
 #
-mkdir -p $HOME/.stack.alpine
-ln -s $HOME/.stack.alpine .stack.alpine
-STACKCMD="docker run --rm -v $PWD/.stack.alpine:/home/alpine/.stack -v $PWD:/project mgreenly/alpine-stack:latest /usr/bin/stack"
 
-if [ ! -e .stack.alpine/config.yaml ]; then
-  STACK_INSTALL_ROOT_DIR=$(eval "$STACKCMD" setup)
+#
+# make sure the directory actually exists on the host
+#
+if [[ ! -e $HOME/.stack.alpine ]]; then
+  mkdir $HOME/.stack.alpine
 fi
 
+#
+# make sure the project links to it
+#
+if [[ ! -e $PWD/.stack.alpine ]]; then
+  ln -s $HOME/.stack.alpine $PWD/.stack.alpine
+fi
+
+#
+# the docker command used to run the stack binary
+#
+STACKCMD="docker run --rm -v $PWD/.stack.alpine:/home/alpine/.stack -v $PWD:/project mgreenly/alpine-stack:latest /usr/bin/stack --system-ghc"
+
+#
+# if stacks not setup do that
+#
+#if [ ! -e .stack.alpine/config.yaml ]; then
+#  STACK_INSTALL_ROOT_DIR=$(eval "$STACKCMD" setup)
+#fi
+
+#
+# figure out where stack will install the binaries at
+#
 STACK_INSTALL_ROOT_DIR=$(eval "$STACKCMD" path | grep "local-install-root" | cut -f2 -d' ')
 STACK_INSTALL_BIN_PATH=${STACK_INSTALL_ROOT_DIR}/bin
 
@@ -63,6 +87,16 @@ REL_STACK_BINDIR=${STACK_INSTALL_BIN_PATH#/project/}
 #
 CABAL_FILE=`find . -iname *.cabal -printf "%f"`
 EXE_NAME=`grep -e '^executable' $CABAL_FILE | tr -s ' ' | cut -d' ' -f2`
+
+#
+# dump the vars and exit when debugging
+#
+#echo "STACK_INSTALL_ROOT_DIR=$STACK_INSTALL_ROOT_DIR"
+#echo "STACK_INSTALL_BIN_PATH=$STACK_INSTALL_BIN_PATH"
+#echo "REL_STACK_BINDIR      =$REL_STACK_BINDIR"
+#echo "CABAL_FILE            =$CABAL_FILE"
+#echo "EXE_NAME              =$EXE_NAME"
+#exit
 
 #
 # the template for the Dockerfile.  Be sure to include any
@@ -90,10 +124,16 @@ CMD $EXE_NAME
 EOF
 
 #
-# add lines to .dockerignore file
+# if the .dockerignore doesn't exist create it
 #
+if [[ ! -e .dockerignore ]]; then
+  touch .dockerignore
+fi
+
+#
+# add lines to .dockerignore file
 grep -q -F '.stack.alpine' .dockerignore || echo '.stack.alpine' >> .dockerignore
-grep -q -F '.stack-work/dist' dockerignore || echo '.stack-work/dist' >> .dockerignore
+grep -q -F '.stack-work/dist' .dockerignore || echo '.stack-work/dist' >> .dockerignore
 
 
 #

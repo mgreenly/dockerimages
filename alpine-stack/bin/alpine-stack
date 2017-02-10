@@ -8,12 +8,14 @@
 #
 # This script should be run from the projects root directory.
 #
-
 if [[ ! -f stack.yaml ]]; then
-  echo ""
-  echo "Can't find a stack.yaml file.  The current directory doesn't appear to be a Haskell Stack project.  Cowardly aborting."
-  echo ""
-  exit 1
+  # don't abort if we are trying to initialize the project directory
+  if [[ "$1" != "new" ]]; then
+    echo ""
+    echo "Can't find a stack.yaml file.  The current directory doesn't appear to be a Haskell Stack project.  Cowardly aborting."
+    echo ""
+    exit 1
+  fi
 fi
 
 #
@@ -37,7 +39,6 @@ fi
 
 if [[ ! -d .stack.alpine ]]; then
   ln -s $HOME/.stack.alpine $PWD/.stack.alpine
-  exit
 fi
 
 #
@@ -48,4 +49,4 @@ docker run --rm -i -t \
   -v $PWD/.stack.alpine:/home/alpine/.stack  \
   -v $PWD:/project \
   mgreenly/alpine-stack:latest \
-  stack $@
+  stack $@ --system-ghc
