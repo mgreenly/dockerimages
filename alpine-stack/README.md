@@ -18,7 +18,7 @@ There are two scripts in the bin directory; `alpine-dockerize` and `alpine-stack
 
 Inside the directory of your Haskell project run `alpine-stack init --resolver ghc-8.0.2`.  
 
-The stackage snapshot must be compatible with GHC 8.0.2 because the Stack binary installed in the docker image is limited to using the docker image's system installed version of GHC which is currently 8.0.2.
+Which ever stackage snapshot is used it must be compatible with GHC 8.0.2 because the Stack binary installed in the docker image is limited to using the system installed version of GHC which is currently 8.0.2.
 
 Then run `alpine-dockerize`.
 
