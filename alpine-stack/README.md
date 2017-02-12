@@ -16,19 +16,19 @@ I just tried to put his hardwork to good use and make it a little easier for me 
 
 There are two scripts in the bin directory; `alpine-dockerize` and `alpine-stack`.  Add both to a direcotry on your $PATH, for example in $HOME/.local/bin.
 
-Inside the directory of your Haskell project run `alpine-stack init --resolver nightly`.  The nightly resolver is required until Stackage LTS is using GHC 8.0.2.
+Inside the directory of your Haskell project run `alpine-stack init --resolver ghc-8.0.2`.  
+
+The stackage snapshot must be compatible with GHC 8.0.2 because the Stack binary installed in the docker image is limited to using the docker image's system installed version of GHC which is currently 8.0.2.
 
 Then run `alpine-dockerize`.
 
-The dockerize script generates a few files.  `Dockerfile.alpine`, `build.alpine.sh`, and `run.alpine.sh`
+The dockerize script generates a few files `Dockerfile.alpine`, `build.alpine.sh`, and `run.alpine.sh`
 
-The dockerize script is pretty dumb.  It assumes there's only a single executable defined in the cabal files and generates the necessary commands to copy it into the image.  It's purpose is to provide a baseline that you can evolve for more complex projects.
+The dockerize script is pretty dumb. It's purpose is to provide a baseline that you can evolve for more complex projects.
 
-The `build.alpine.sh` script is to reduce my build process to a single command. Delete it if you don't want it. I find it saves typing.
+The `build.alpine.sh` script exists to reduce the build process to a single command. Delete it if you don't want it. I find it saves typing.
 
 The `run.alpine.sh` script exists to make running the binary in a container move convenient.  Delete it if you don't want it.  I find it saves typing.
-
-The docker and stack related directories not needed by the build context are added to the `.dockerignore` file.
 
 After running the dockerize script use `./build.alpine.sh` to build the image.
 

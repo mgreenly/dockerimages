@@ -25,6 +25,7 @@ RUN apk update \
       ncurses5-widec-libs \
       ncurses-terminfo-base \
       ncurses-terminfo \
+      git \
     && adduser -D -u1000 alpine \
     && mkdir /project \
     && chown alpine.alpine /project
