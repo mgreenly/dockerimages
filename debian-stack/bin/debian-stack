@@ -45,4 +45,4 @@ docker run --rm -i -t \
   -v $PWD/.stack.debian:/home/haskell/.stack  \
   -v $PWD:/project \
   mgreenly/debian-stack:latest \
-  stack $@
+  stack $@ --install-ghc

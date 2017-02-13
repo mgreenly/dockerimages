@@ -2,11 +2,11 @@
 
 ## Introduction
 
-This is a [Docker](https://www.docker.com/) image for a [Stack](http://docs.haskellstack.org/en/stable/README.html) based [Haskell](https://www.haskell.org/) development environment on [Debian Linux](https://www.debian.org/).
+This is a [Docker](https://www.docker.com/) image for [Stack](http://docs.haskellstack.org/en/stable/README.html) based [Haskell](https://www.haskell.org/) development on [Debian Linux](https://www.debian.org/).
 
-It allows you to build relatively small Docker images for Stack based Haskell applications.
+It allows you to build relatively small Docker images for Haskell applications.
 
-Approximately 126MB for a typical hello world application.
+Approximately 126MB for a typical hello world application vs over 1.5GB for Stack's fpco/stack-run image.
 
 ## How To Use This
 
@@ -14,15 +14,13 @@ There are two scripts in the bin directory.  Add both to a direcotry on your $PA
 
 Inside the directory of your stack project run `debian-dockerize`.
 
-The dockerize script generates a few files.  Dockerfile.debian, .dockerignore, build.debian.sh, and run.debian.sh
+The dockerize script generates a few files.  Dockerfile.debian, build.debian.sh, and run.debian.sh
 
-The dockerize script generates a 'Dockerfile'.  The  dockerize script is pretty dumb.  It assumes there's only a single executable defined in the cabal files and generates the necessary commands to copy it into the image.  It's purpose is to provide a baseline that you can evolve for your proejct.
+The dockerize script generates a 'Dockerfile'. It's purpose is to provide a baseline that you can evolve for your proejct.
 
 The dockerize script also generates a 'build.debian.sh' script.  This scripts purpose is to reduce the build process to a single command. Delete it if you don't want it. I find it saves typing.
 
 The dockerize script also generates a 'run.debian.sh' script.  This scripts purpose is to reduce the typing necessary to run the produced container.  Delete it if you don't want it.
-
-The dockerize script also generates a .dockerignore file if necessary and adds the necesary entries.
 
 After running the dockerize script just run `.\build.debian.sh` to build the image.
 
@@ -33,12 +31,11 @@ Then use `./run.debian.sh` to run the image
 Doing this for a hello-world application may look like this.
 
 ```
-stack new hello-world                               # create new stack project
+stack new hello-world simple                        # create new stack project
 cd hello-world                                      # enter project
 debian-dockerize                                    # create docker/build.sh scripts
-debian-stack build                                  # use stack to build the application
-docker build -f Dockerfile.debian -t hello-world .  # build the image
-docker run hello-world                              # run the image
+./build-debian.sh                                   # build the image 
+./run.debian.sh                                     # run the image
 ```
 
 

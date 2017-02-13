@@ -2,9 +2,9 @@
 
 ## Introduction
 
-This is a [Docker](https://www.docker.com/) image for a [Stack](http://docs.haskellstack.org/en/stable/README.html) based [Haskell](https://www.haskell.org/) development environment on [Alpine Linux](http://alpinelinux.org/).
+This is a [Docker](https://www.docker.com/) image for a [Stack](http://docs.haskellstack.org/en/stable/README.html) based [Haskell](https://www.haskell.org/) development on [Alpine Linux](http://alpinelinux.org/).
 
-It allows you to build very small Docker images for Stack based Haskell applications.
+It allows you to build very small Docker images from Haskell applications.
 
 Approximately 8MB for a typical hello world application vs over 1.5GB for Stack's fpco/stack-run image.
 
@@ -46,7 +46,7 @@ alpine-dockerize                                               # create docker f
 
 
 
-## How things work
+## Details
 
 The `mgreenly/alpine-stack` image provides the development environment.  It has stack, ghc and ghci as well as many common libraries installed on it.  It's big, approximately 1.9GB but it only needs to exist on the developers machine.
 

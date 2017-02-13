@@ -16,6 +16,7 @@ RUN USERNAME=haskell \
         -q -y install \
         libncursesw5-dev \
         stack \
+        git \
     && adduser --disabled-password --gecos "" --uid 1000 $USERNAME \
     && mkdir /project \
     && chown $USERNAME.$USERNAME /project
