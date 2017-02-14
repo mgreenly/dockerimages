@@ -37,7 +37,7 @@ Once the image is built you can use `./run.alpine.sh` to run the image.
 ## Example
 
 ```
-stack new hello-world simple --resolver nightly                # create a new project
+stack new hello-world simple --resolver ghc-8.0.2              # create a new project
 cd hello-world                                                 # enter project
 alpine-dockerize                                               # create docker file and build scripts
 ./build.alpine.sh                                              # build the image
