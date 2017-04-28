@@ -1,32 +1,39 @@
 FROM alpine:latest
 
-ENV GEM_HOME=/home/ruby/.gems
-ENV PATH="/home/ruby/.gems/bin:${PATH}"
+ENV GEM_HOME=/home/ruby/.gem
 
-ENV SYSTEM_PACKAGES \
-  postgresql-client \
-  libxml2 \
-  libffi \
+ENV BUILD_PACKAGES \
+  bash \
   tzdata \
-  libressl
+  build-base \
+  nodejs \
+  ruby-dev \
+  postgresql-dev \
+  libffi-dev \
+  libressl-dev \
+  libxml2-dev
 
-ENV RUBY_PACKAGES  \
+ENV RUBY_PACKAGES \
   ruby \
   ruby-irb \
   ruby-io-console \
   ruby-json \
   ruby-bigdecimal
 
+ENV PATH="/home/ruby/.alpine-gem/bin:${PATH}"
+
 RUN apk update \
-    && apk add $SYSTEM_PACKAGES \
+    && apk add $BUILD_PACKAGES \
     && apk add $RUBY_PACKAGES \
     && rm -rf /var/cache/apk/* \
     && adduser -D -u1000 ruby \
     && echo "gem: --no-document" > /home/ruby/.gemrc \
-    && mkdir /ruby \
-    && chown -R ruby.ruby /ruby \
-    && su -c "gem install bundler" ruby
+    && mkdir /workdir \
+    && chown -R ruby.ruby /workdir
 
 USER ruby
-WORKDIR /ruby
+WORKDIR /workdir
 CMD /bin/sh
+
+
+#    && su -c "gem install bundler" ruby
