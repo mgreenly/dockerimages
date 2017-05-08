@@ -114,7 +114,7 @@ ADD $REL_STACK_BINDIR /usr/local/bin
 # can remove all the apk-add command.
 RUN apk update                      \\
     && apk add gmp                  \\
-    && adduser -D -u1000 haskell
+    && adduser -D -u $(id -u) haskell
 
 USER haskell
 

@@ -120,7 +120,7 @@ RUN DEBIAN_FRONTEND=noninteractive                    \\
       libgmp10                                        \\
     && apt-get clean                                  \\
     && rm -rf /var/lib/apt/lists/*                    \\
-    && adduser --disabled-password --gecos "" haskell
+    && adduser --uid $(id -u) --disabled-password --gecos "" haskell
 
 USER haskell
 
