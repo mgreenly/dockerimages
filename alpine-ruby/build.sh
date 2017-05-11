@@ -1,33 +1,47 @@
 #!/bin/bash
 
 #
-# Automation to build and upload this docker image. 
+# fail if any variable is unset
 #
+set -u
 
 #
-# make sure the base is current
+# the image we're going to build
 #
-docker pull alpine:latest
+IMAGE_NAME="mgreenly/alpine-ruby-base"
 
 #
-# get the tag and id of the current image/tag 
+# define the version info
 #
-oldtag=$(docker images --format="{{.ID}}:{{.Tag}}" mgreenly/alpine-ruby | grep -v latest | cut -f2 -d:)
-oldid=$(docker images --format="{{.ID}}:{{.Tag}}" mgreenly/alpine-ruby | grep latest | cut -f1 -d:)
+export ALPINE_VERSION="3.5"
+export RUBY_MAJOR="2.4"
+export RUBY_VERSION="2.4.1"
+export RUBY_DOWNLOAD_SHA256="4fc8a9992de3e90191de369270ea4b6c1b171b7941743614cc50822ddc1fe654"
+export RUBYGEMS_VERSION="2.6.12"
+export BUNDLER_VERSION="1.14.6"
 
 #
-# generate the tag for the new image and build it also tag it latest
+# display the version info
 #
-newtag=$(date +"%Y%m%d%H%M%S")
-docker build -t mgreenly/alpine-ruby:$newtag .
-docker tag mgreenly/alpine-ruby:"$newtag" mgreenly/alpine-ruby:latest
-
-if [[ -n "$oldtag" ]]; then
-  docker rmi mgreenly/alpine-ruby:$oldtag
-fi
-
+echo "          RUBY_MAJOR: $RUBY_MAJOR"
+echo "        RUBY_VERSION: $RUBY_VERSION"
+echo "RUBY_DOWNLOAD_SHA256: $RUBY_DOWNLOAD_SHA256"
+echo "    RUBYGEMS_VERSION: $RUBYGEMS_VERSION"
+echo "     BUNDLER_VERSION: $BUNDLER_VERSION"
+source ../versions.sh
 
 #
-# upload the new latest
+# then construct the Dockerfile
 #
-#docker push mgreenly/alpine-ruby:latest
+envsubst < Dockerfile.tmpl > Dockerfile
+
+docker build \
+  -t "$IMAGE_NAME":"$RUBY_VERSION" \
+  .
+
+#
+# set the latest tag
+#
+docker tag \
+  "$IMAGE_NAME":"$RUBY_VERSION" \
+  "$IMAGE_NAME":latest

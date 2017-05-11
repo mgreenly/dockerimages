@@ -1,11 +1,11 @@
 # vim: ft=dockerfile
-FROM alpine:3.5
+FROM alpine:$ALPINE_VERSION
 
-ENV RUBY_MAJOR "2.4"
-ENV RUBY_VERSION "2.4.1"
-ENV RUBY_DOWNLOAD_SHA256 "4fc8a9992de3e90191de369270ea4b6c1b171b7941743614cc50822ddc1fe654"
-ENV RUBYGEMS_VERSION "2.6.12"
-ENV BUNDLER_VERSION "1.14.6"
+ENV RUBY_MAJOR "$RUBY_MAJOR"
+ENV RUBY_VERSION "$RUBY_VERSION"
+ENV RUBY_DOWNLOAD_SHA256 "$RUBY_DOWNLOAD_SHA256"
+ENV RUBYGEMS_VERSION "$RUBYGEMS_VERSION"
+ENV BUNDLER_VERSION "$BUNDLER_VERSION"
 
 # skip installing gem documentation
 RUN mkdir -p /usr/local/etc \
@@ -47,8 +47,8 @@ RUN set -ex \
     zlib-dev \
     xz \
   \
-  && wget -O ruby.tar.xz "https://cache.ruby-lang.org/pub/ruby/${RUBY_MAJOR%-rc}/ruby-2.4.1.tar.xz" \
-  && echo "4fc8a9992de3e90191de369270ea4b6c1b171b7941743614cc50822ddc1fe654 *ruby.tar.xz" | sha256sum -c - \
+  && wget -O ruby.tar.xz "https://cache.ruby-lang.org/pub/ruby/${RUBY_MAJOR%-rc}/ruby-$RUBY_VERSION.tar.xz" \
+  && echo "$RUBY_DOWNLOAD_SHA256 *ruby.tar.xz" | sha256sum -c - \
   \
   && mkdir -p /usr/src/ruby \
   && tar -xJf ruby.tar.xz -C /usr/src/ruby --strip-components=1 \
@@ -79,7 +79,7 @@ RUN set -ex \
       | xargs -r apk info --installed \
       | sort -u \
   )" \
-  && apk add --virtual .ruby-rundeps  \
+  && apk add --virtual .ruby-rundeps $runDeps \
     bzip2 \
     ca-certificates \
     libffi-dev \
@@ -91,8 +91,8 @@ RUN set -ex \
   && cd / \
   && rm -r /usr/src/ruby \
   \
-  && gem update --system "2.6.12"
+  && gem update --system "$RUBYGEMS_VERSION"
 
 ENV BUNDLER_VERSION 1.14.6
 
-RUN gem install bundler --version "1.14.6"
+RUN gem install bundler --version "$BUNDLER_VERSION"
