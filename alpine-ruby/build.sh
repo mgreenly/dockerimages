@@ -8,7 +8,7 @@ set -u
 #
 # the image we're going to build
 #
-IMAGE_NAME="mgreenly/alpine-ruby-base"
+IMAGE_NAME="mgreenly/alpine-ruby"
 
 #
 # define the version info
@@ -45,3 +45,9 @@ docker build \
 docker tag \
   "$IMAGE_NAME":"$RUBY_VERSION" \
   "$IMAGE_NAME":latest
+
+#
+# push the image
+#
+docker push "$IMAGE_NAME":"$RUBY_VERSION"
+docker push "$IMAGE_NAME":latest
