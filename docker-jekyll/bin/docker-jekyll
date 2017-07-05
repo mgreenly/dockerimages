@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# This will allow you to use the `docker-jekyll command just like you'd normally use the jekyll command.
+#
+# This script needs to be on your PATH.
+#
+# This script should be run from the jekyll projects root directory
+
+
+#
+# make sure we have the current image 
+#
+docker pull mgreenly/docker-jekyll > /dev/null
+
+#
+# All arguments given to this script are passed to the stack application
+# running in the container
+#
+docker run --rm -it \
+  -v $PWD:/workdir \
+  mgreenly/docker-jekyll \
+  jekyll $@
