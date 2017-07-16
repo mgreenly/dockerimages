@@ -1,11 +1,11 @@
 # vim: ft=dockerfile
-FROM alpine:3.5
+FROM alpine:3.6
 
 ENV RUBY_MAJOR "2.4"
 ENV RUBY_VERSION "2.4.1"
 ENV RUBY_DOWNLOAD_SHA256 "4fc8a9992de3e90191de369270ea4b6c1b171b7941743614cc50822ddc1fe654"
 ENV RUBYGEMS_VERSION "2.6.12"
-ENV BUNDLER_VERSION "1.14.6"
+ENV BUNDLER_VERSION "1.15.1"
 
 # skip installing gem documentation
 RUN mkdir -p /usr/local/etc \
@@ -93,6 +93,6 @@ RUN set -ex \
   \
   && gem update --system "2.6.12"
 
-ENV BUNDLER_VERSION 1.14.6
+#ENV BUNDLER_VERSION "1.15.1"
 
-RUN gem install bundler --version "1.14.6"
+RUN gem install bundler --version "1.15.1"
