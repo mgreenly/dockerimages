@@ -1,0 +1,52 @@
+#!/bin/bash
+
+## This will allow you to use the `alpine-stack` command in
+## the project folder of any stack application just like you
+## would have used the normal `stack` command.
+##
+## This script needs to be on your PATH.
+##
+## This script should be run from the projects root directory.
+##
+#if [[ ! -f stack.yaml ]]; then
+#  # don't abort if we are trying to initialize the project directory
+#  if [[ "$1" != "new" ]]; then
+#    echo ""
+#    echo "Can't find a stack.yaml file.  The current directory doesn't appear to be a Haskell Stack project.  Cowardly aborting."
+#    echo ""
+#    exit 1
+#  fi
+#fi
+
+#
+# make sure we have the current image 
+#
+#docker pull mgreenly/alpine-stack:latest
+
+#
+# Docker doesn't allow build contexts to include directories
+# outside the current working directory.  So this script links
+# the current users $HOME/.stack.alpine directory into the
+# working project directory if necessary and then mounts
+# that directory as $HOME/.stack inside the container
+#
+# This allows stack to reuse compiled packages between projects
+# like it normally would when not run in a container.
+#
+if [[ ! -e $HOME/.debian.rvm ]]; then
+  mkdir $HOME/.stack.alpine
+fi
+
+if [[ ! -d .stack.alpine ]]; then
+  ln -s $HOME/.stack.alpine $PWD/.stack.alpine
+fi
+
+#
+# All arguments given to this script are passed to the stack application
+# running in the container
+#
+docker run --rm -i -t \
+  -v $PWD/.stack.alpine:/home/alpine/.stack  \
+  -v $PWD:/project \
+  mgreenly/alpine-stack:latest \
+  stack $@ --system-ghc
