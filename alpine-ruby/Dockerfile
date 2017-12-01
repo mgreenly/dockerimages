@@ -2,10 +2,10 @@
 FROM alpine:3.6
 
 ENV RUBY_MAJOR "2.4"
-ENV RUBY_VERSION "2.4.1"
-ENV RUBY_DOWNLOAD_SHA256 "4fc8a9992de3e90191de369270ea4b6c1b171b7941743614cc50822ddc1fe654"
-ENV RUBYGEMS_VERSION "2.6.12"
-ENV BUNDLER_VERSION "1.15.1"
+ENV RUBY_VERSION "2.4.2"
+ENV RUBY_DOWNLOAD_SHA256 "748a8980d30141bd1a4124e11745bb105b436fb1890826e0d2b9ea31af27f735"
+ENV RUBYGEMS_VERSION "2.6.14"
+ENV BUNDLER_VERSION "1.16.0"
 
 # skip installing gem documentation
 RUN mkdir -p /usr/local/etc \
@@ -47,8 +47,8 @@ RUN set -ex \
     zlib-dev \
     xz \
   \
-  && wget -O ruby.tar.xz "https://cache.ruby-lang.org/pub/ruby/${RUBY_MAJOR%-rc}/ruby-2.4.1.tar.xz" \
-  && echo "4fc8a9992de3e90191de369270ea4b6c1b171b7941743614cc50822ddc1fe654 *ruby.tar.xz" | sha256sum -c - \
+  && wget -O ruby.tar.xz "https://cache.ruby-lang.org/pub/ruby/${RUBY_MAJOR%-rc}/ruby-2.4.2.tar.xz" \
+  && echo "748a8980d30141bd1a4124e11745bb105b436fb1890826e0d2b9ea31af27f735 *ruby.tar.xz" | sha256sum -c - \
   \
   && mkdir -p /usr/src/ruby \
   && tar -xJf ruby.tar.xz -C /usr/src/ruby --strip-components=1 \
@@ -91,8 +91,8 @@ RUN set -ex \
   && cd / \
   && rm -r /usr/src/ruby \
   \
-  && gem update --system "2.6.12"
+  && gem update --system "2.6.14"
 
-#ENV BUNDLER_VERSION "1.15.1"
+#ENV BUNDLER_VERSION "1.16.0"
 
-RUN gem install bundler --version "1.15.1"
+RUN gem install bundler --version "1.16.0"
