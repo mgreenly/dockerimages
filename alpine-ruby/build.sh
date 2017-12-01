@@ -60,7 +60,15 @@ docker tag \
   "$IMAGE_NAME":latest
 
 #
+# set the ruby version tag
+#
+docker tag \
+  "$IMAGE_NAME":"$IMAGE_TAG" \
+  "$IMAGE_NAME":"$RUBY_VERSION"
+
+#
 # push the image
 #
 docker push "$IMAGE_NAME":"$IMAGE_TAG"
+docker push "$IMAGE_NAME":"$RUBY_VERSION"
 docker push "$IMAGE_NAME":latest
