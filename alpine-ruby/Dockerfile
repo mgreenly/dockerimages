@@ -19,7 +19,6 @@ RUN mkdir -p /usr/local/etc \
 #   we purge system ruby later to make sure our final image uses what we just built
 # readline-dev vs libedit-dev: https://bugs.ruby-lang.org/issues/11869 and https://github.com/docker-library/ruby/issues/75
 RUN set -ex \
-  \
   && apk add --no-cache --virtual .ruby-builddeps \
     autoconf \
     bison \
@@ -46,32 +45,23 @@ RUN set -ex \
     yaml-dev \
     zlib-dev \
     xz \
-  \
   && wget -O ruby.tar.xz "https://cache.ruby-lang.org/pub/ruby/${RUBY_MAJOR%-rc}/ruby-2.4.2.tar.xz" \
   && echo "748a8980d30141bd1a4124e11745bb105b436fb1890826e0d2b9ea31af27f735 *ruby.tar.xz" | sha256sum -c - \
-  \
   && mkdir -p /usr/src/ruby \
   && tar -xJf ruby.tar.xz -C /usr/src/ruby --strip-components=1 \
   && rm ruby.tar.xz \
-  \
   && cd /usr/src/ruby \
-  \
-# hack in "ENABLE_PATH_CHECK" disabling to suppress:
-#   warning: Insecure world writable dir
   && { \
     echo '#define ENABLE_PATH_CHECK 0'; \
     echo; \
     cat file.c; \
   } > file.c.new \
   && mv file.c.new file.c \
-  \
   && autoconf \
-# the configure script does not detect isnan/isinf as macros
   && ac_cv_func_isnan=yes ac_cv_func_isinf=yes \
     ./configure --disable-install-doc --enable-shared \
   && make -j"$(getconf _NPROCESSORS_ONLN)" \
   && make install \
-  \
   && runDeps="$( \
     scanelf --needed --nobanner --recursive /usr/local \
       | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
@@ -90,9 +80,6 @@ RUN set -ex \
   && apk del .ruby-builddeps \
   && cd / \
   && rm -r /usr/src/ruby \
-  \
   && gem update --system "2.6.14"
-
-#ENV BUNDLER_VERSION "1.16.0"
 
 RUN gem install bundler --version "1.16.0"

@@ -37,6 +37,7 @@ echo "     BUNDLER_VERSION: $BUNDLER_VERSION"
 echo "          IMAGE_NAME: $IMAGE_NAME"
 echo "                TIME: $TIME"
 echo "           IMAGE_TAG: $IMAGE_TAG"
+echo
 
 #
 # construct the docker file with this version info
