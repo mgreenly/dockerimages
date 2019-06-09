@@ -1,0 +1,7 @@
+#!/bin/bash
+
+
+docker run --rm -i -t \
+  -v $PWD:/workdir  \
+  mgreenly/debian-ghc:latest \
+  cabal $@
