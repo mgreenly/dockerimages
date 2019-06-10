@@ -1,9 +1,10 @@
 FROM debian:latest
 
+#
+# This is just a prototype to flesh out the idea.  If this all works
+# this will be optimized for size later
+#
 
-#
-# run a single command to configure the image
-#
 RUN USERNAME=haskell \
     DEBIAN_FRONTEND=noninteractive \
     && cd /tmp \
@@ -33,7 +34,6 @@ USER haskell
 
 RUN curl https://gitlab.haskell.org/haskell/ghcup/raw/master/bootstrap-haskell -sSf | env BOOTSTRAP_HASKELL_NONINTERACTIVE=true sh
 
+RUN rm -rf /home/haskell/.cabal
+
 WORKDIR /workdir
-
-
-
