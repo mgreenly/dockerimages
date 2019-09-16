@@ -1,0 +1,34 @@
+#!/bin/bash
+
+#
+# Docker doesn't allow build contexts to include directories
+# outside the current working directory.  So this script sym
+# links the current users $HOME/.debian-cabal directory into
+# the working directory if necessary and then mounts that
+# directory as /home/haskell/.cabal inside the container
+#
+# This allows cabal to reuse compiled packages between projects
+# like it normally would when it's not run in a container
+
+# if [[ ! -e $HOME/.debian-ruby ]]; then
+#   mkdir $HOME/.debian-ruby
+# fi
+
+if [[ ! -d .debian-ruby ]]; then
+  # ln -s $HOME/.debian-ruby $PWD/.debian-ruby
+  mkdir .debian-ruby
+fi
+
+# docker pull mgreenly/ruby
+
+#
+# all arguments given to this script are passed to cabal running in the container
+#
+exec docker run --rm -i -t \
+  -u $(id -u):$(id -g) \
+  -v $PWD/.debian-ruby:/home/ruby/.debian-ruby \
+  -v $PWD:/workdir  \
+  -w /workdir \
+  -e GEM_HOME=/home/ruby/.debian-ruby \
+  mgreenly/ruby:latest \
+  $@
