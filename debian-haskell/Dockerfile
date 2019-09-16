@@ -1,9 +1,9 @@
-FROM debian:buster
+FROM debian:10.1
 
-#
-# This is just a prototype to flesh out the idea.  If this all works
-# this will be optimized for size later
-#
+ARG GHC_VER=8.6
+
+COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
+
 RUN USERNAME=haskell \
     DEBIAN_FRONTEND=noninteractive \
     && cd /tmp \
@@ -18,23 +18,19 @@ RUN USERNAME=haskell \
       libffi-dev \
       libncurses-dev \
       libtinfo5 \
-    && adduser --disabled-password --gecos "" --uid 1000 $USERNAME
-    # && chown $USERNAME.$USERNAME /workdir
-
-USER haskell
-RUN mkdir -p $HOME/.ghcup/bin
-RUN curl https://gitlab.haskell.org/haskell/ghcup/raw/master/ghcup > $HOME/.ghcup/bin/ghcup
-RUN chmod +x ~/.ghcup/bin/ghcup
+    && adduser --disabled-password --gecos "" --uid 1000 $USERNAME \
+    && chmod +x /usr/local/bin/entrypoint.sh
 
 ENV PATH="/home/haskell/.cabal/bin:/home/haskell/.ghcup/bin:${PATH}"
 
-RUN ghcup install 8.8
-RUN ghcup set 8.8
-RUN ghcup install-cabal
+USER haskell
 
+RUN mkdir -p $HOME/.ghcup/bin \
+    && curl https://gitlab.haskell.org/haskell/ghcup/raw/master/ghcup > $HOME/.ghcup/bin/ghcup \
+    && chmod +x ~/.ghcup/bin/ghcup \
+    && ghcup install ${GHC_VER} \
+    && ghcup set ${GCH_VER} \
+    && ghcup install-cabal
 
-# RUN curl https://raw.githubusercontent.com/haskell/ghcup/master/bootstrap-haskell -sSf | env BOOTSTRAP_HASKELL_NONINTERACTIVE=true sh -s 8.8
-# RUN curl https://gitlab.haskell.org/haskell/ghcup/raw/master/bootstrap-haskell -sSf | env BOOTSTRAP_HASKELL_NONINTERACTIVE=true sh
-# RUN rm -rf /home/haskell/.cabal
-
-# WORKDIR /workdir
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["/bin/bash"]
