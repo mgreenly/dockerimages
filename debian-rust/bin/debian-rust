@@ -15,9 +15,8 @@ fi
 #
 exec docker run --rm -it \
   -u "$(id -u)":"$(id -g)" \
-  -v "$PWD"/.debian-cargo:/home/rust/.cargo \
   -v "$PWD":/workdir \
   -w /workdir \
-  -e CARGO_HOME=/home/rust/.cargo \
+  -e CARGO_HOME=/workdir/.debian-cargo \
   mgreenly/rust:latest \
   $@
