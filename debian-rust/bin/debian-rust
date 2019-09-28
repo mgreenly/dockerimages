@@ -1,0 +1,23 @@
+#!/bin/bash
+
+docker pull mgreenly/rust:latest
+
+#
+# make sure the per project .cargo folder exists.  the docker
+# image uses this to cache crates
+#
+if [[ ! -d .debian-cargo ]]; then
+  mkdir $PWD/.debian-cargo
+fi
+
+#
+# all arguments given to this script are passed to cabal running in the container
+#
+exec docker run --rm -it \
+  -u "$(id -u)":"$(id -g)" \
+  -v "$PWD"/.debian-cargo:/home/rust/.cargo \
+  -v "$PWD":/workdir \
+  -w /workdir \
+  -e CARGO_HOME=/home/rust/.cargo \
+  mgreenly/rust:latest \
+  $@
