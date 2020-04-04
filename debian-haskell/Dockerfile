@@ -1,6 +1,6 @@
-FROM debian:10.1
+FROM debian:10.3
 
-ARG GHC_VER=8.6
+ARG GHC_VER=8.10.1
 
 COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
 

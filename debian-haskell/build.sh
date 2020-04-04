@@ -4,8 +4,8 @@
 # Automation to build and upload this docker image. 
 #
 IMAGE_NAME="haskell"
-FROM_TAG="debian-10.1"
-GHC_VER="8.8"
+FROM_TAG="debian-10.3"
+GHC_VER="8.10.1"
 
 #
 # make sure the base is current
@@ -37,5 +37,5 @@ fi
 #
 # push the latest images
 #
-docker push mgreenly/$IMAGE_NAME:latest
-docker push mgreenly/$IMAGE_NAME:$newtag
+# docker push mgreenly/$IMAGE_NAME:latest
+# docker push mgreenly/$IMAGE_NAME:$newtag

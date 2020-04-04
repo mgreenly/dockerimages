@@ -4,7 +4,7 @@ if [[ ! -d .debian-cabal ]]; then
   mkdir $PWD/.debian-cabal
 fi
 
-# docker pull mgreenly/haskell
+docker pull mgreenly/haskell
 
 #
 # all arguments given to this script are passed to cabal running in the container
