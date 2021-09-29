@@ -4,13 +4,13 @@ BUILD="1"
 
 SRC_HOST="docker.io"
 SRC_REGISTRY="library"
-SRC_IMAGE="rust"
-SRC_TAG="1.55.0-slim-bullseye"
+SRC_IMAGE="debian"
+SRC_TAG="11.0-slim"
 SRC=${SRC_HOST}/${SRC_REGISTRY}/${SRC_IMAGE}:${SRC_TAG}
 
 DST_HOST="registry.digitalocean.com"
 DST_REGISTRY="metaspot"
-DST_IMAGE="rust"
+DST_IMAGE="debian"
 DST_TAG=${SRC_TAG}_${BUILD}
 DST=${DST_HOST}/${DST_REGISTRY}/${DST_IMAGE}
 
@@ -29,11 +29,11 @@ docker build \
   -t ${DST}:${DST_TAG} \
   .
 
-# tag the specified image as latest
-docker tag \
-  ${DST}:${DST_TAG} \
-  ${DST}:latest
+# # tag the specified image as latest
+# docker tag \
+#   ${DST}:${DST_TAG} \
+#   ${DST}:latest
 
 # push both the specified and latest tag
-docker push $DST:latest
+# docker push $DST:latest
 docker push $DST:${DST_TAG}

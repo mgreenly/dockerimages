@@ -4,7 +4,9 @@ if [[ ! -d .debian-cabal ]]; then
   mkdir $PWD/.debian-cabal
 fi
 
-docker pull mgreenly/haskell
+IMAGE='registry.digitalocean.com/metaspot/haskell:8.10.7_1'
+
+docker pull $IMAGE > /dev/null
 
 #
 # the provided arguments are passed to the container
@@ -14,5 +16,5 @@ exec docker run --rm -i -t \
   -v $PWD/.debian-cabal:/home/haskell/.cabal \
   -v $PWD:/workdir  \
   -w /workdir \
-  mgreenly/haskell:latest \
+  $IMAGE \
   $@

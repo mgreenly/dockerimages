@@ -1,9 +1,12 @@
-ARG FROM_IMAGE="debian"
-ARG FROM_TAG="10-slim"
+ARG SRC_HOST="docker.io"
+ARG SRC_REGISTRY="library"
+ARG SRC_IMAGE="debian"
+ARG SRC_TAG="11.0-slim"
+ARG SRC=${SRC_HOST}/${SRC_REGISTRY}/${SRC_IMAGE}:${SRC_TAG}
 ARG GHC_VER=8.8.4
 ARG CABAL_VER=3.2.0.0
 
-FROM ${FROM_IMAGE}:${FROM_TAG}
+FROM ${SRC}
 
 COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
 
@@ -18,12 +21,15 @@ RUN USERNAME=haskell \
       build-essential \
       curl \
       libffi-dev  \
-      libffi6 \
+      libffi7 \
       libgmp-dev \
       libgmp10 \
       libncurses-dev \
       libncurses5 \
+      libnuma-dev \
       libtinfo5 \
+      zlib1g \
+      zlib1g-dev \
     && adduser --disabled-password --gecos "" --uid 1000 $USERNAME \
     && chmod +x /usr/local/bin/entrypoint.sh
 

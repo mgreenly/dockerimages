@@ -1,12 +1,12 @@
 ARG SRC_HOST="docker.io"
 ARG SRC_REGISTRY="library"
-ARG SRC_IMAGE="rust"
-ARG SRC_TAG="1.55.0-slim-bullseye"
+ARG SRC_IMAGE="debian"
+ARG SRC_TAG="11.0-slim"
 ARG SRC=${SRC_HOST}/${SRC_REGISTRY}/${SRC_IMAGE}:${SRC_TAG}
 
 FROM ${SRC}
 
-COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
+# COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
 
 RUN DEBIAN_FRONTEND=noninteractive \
     && cd /tmp \
@@ -14,5 +14,5 @@ RUN DEBIAN_FRONTEND=noninteractive \
     && apt-get -q -y install \
        libffi7
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-CMD ["/bin/bash"]
+# ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+# CMD ["/bin/bash"]

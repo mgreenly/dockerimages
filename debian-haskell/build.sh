@@ -3,48 +3,43 @@
 #
 # Automation to build and upload this docker image. 
 #
-IMAGE_NAME="haskell"
-FROM_IMAGE="debian"
-FROM_TAG="10-slim"
-GHC_VER="8.8.4"
-CABAL_VER="3.2.0.0"
+BUILD="1"
 
-#
-# make sure the base is current
-#
-docker pull ${FROM_IMAGE}:${FROM_TAG}
+SRC_HOST="registry.digitalocean.com"
+SRC_REGISTRY="metaspot"
+SRC_IMAGE="debian"
+SRC_TAG="11.0-slim_1"
+SRC=${SRC_HOST}/${SRC_REGISTRY}/${SRC_IMAGE}:${SRC_TAG}
 
-#
-# get the tag and id of the current image/tag 
-#
-oldtag=$(docker images --format="{{.ID}}:{{.Tag}}" mgreenly/$IMAGE_NAME | sort | head -n 1 | cut -f2 -d:)
-oldid=$(docker images --format="{{.ID}}:{{.Tag}}"  mgreenly/$IMAGE_NAME | sort | head -n 1 | cut -f1 -d:)
+GHC_VER="8.10.7"
+CABAL_VER="3.6.0.0"
 
-echo "oldtag: $oldtag"
-echo "oldid: $oldid"
+DST_HOST="registry.digitalocean.com"
+DST_REGISTRY="metaspot"
+DST_IMAGE="haskell"
+DST_TAG=${GHC_VER}_${BUILD}
+DST=${DST_HOST}/${DST_REGISTRY}/${DST_IMAGE}
 
+# make sure the src image is pulled, prevents unlabeled local images
+docker pull ${SRC}
 
-# build the new =image tagged as latest
+# build the specified dst image
 docker build \
-  --build-arg GHC_VER=$GHC_VER \
-  --build-arg CABAL_VER=$CABAL_VER \
-  -t mgreenly/$IMAGE_NAME:latest \
+  --build-arg SRC_HOST=${SRC_HOST} \
+  --build-arg SRC_REGISTRY=${SRC_REGISTRY} \
+  --build-arg SRC_IMAGE=${SRC_IMAGE} \
+  --build-arg SRC_TAG=${SRC_TAG} \
+  --build-arg SRC=${SRC} \
+  --build-arg GHC_VER=${GHC_VER} \
+  --build-arg CABAL_VER=${CABAL_VER} \
+  -t ${DST}:${DST_TAG} \
   .
 
-exit
+# tag the specified image as latest
+docker tag \
+  ${DST}:${DST_TAG} \
+  ${DST}:latest
 
-# generate build specific tag and add that tag to the latest build
-newtag="$GHC_VER" #-$(date +'%Y%m%d%H%M%S')"
-echo $newtag
-docker tag mgreenly/$IMAGE_NAME:latest mgreenly/$IMAGE_NAME:$newtag
-
-# if an old tag exists remove it
-if [[ -n "$oldtag" ]]; then
-  docker rmi mgreenly/$IMAGE_NAME:$oldtag
-fi
-
-#
-# push the latest images
-#
-# docker push mgreenly/$IMAGE_NAME:latest
-# docker push mgreenly/$IMAGE_NAME:$newtag
+# push both the specified and latest tag
+docker push $DST:latest
+docker push $DST:${DST_TAG}
