@@ -43,3 +43,9 @@ docker tag \
 # push both the specified and latest tag
 docker push $DST:latest
 docker push $DST:${DST_TAG}
+
+# save the image to a file
+docker save ${DST}:${DST_TAG} | xz -T0 > ${DST_IMAGE}-${DST_TAG}.tar.xz
+
+# backup the image to spaces
+s3cmd --progress put ${DST_IMAGE}-${DST_TAG}.tar.xz s3://private-d20-metaspot/images/${DST_IMAGE}-${DST_TAG}.tar.xz
